@@ -262,7 +262,7 @@ function HomePage({ sv }) {
     <div className="fade-up">
       {/* ── HERO: Full-bleed, dead center ── */}
       <section style={{ position:'relative', minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden' }}>
-        <img src="657525199_2344430212721592_43463140918587781_n.jpg" alt="" style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'top center' }}/>
+        <img src="https://images.unsplash.com/photo-1530521954074-e64f6810b32d?auto=format&fit=crop&q=80&w=2000" alt="" style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center' }}/>
         <div style={{ position:'absolute', inset:0, background:`linear-gradient(160deg,${B.green}F2 0%,${B.green}C0 45%,${B.teal}95 100%)` }}/>
         <div style={{ position:'relative', zIndex:1, textAlign:'center', maxWidth:860, padding:'2rem 1.5rem', color:B.parchment }}>
           <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'1rem', marginBottom:'1.5rem' }}>
@@ -282,14 +282,14 @@ function HomePage({ sv }) {
               <span key={p} style={{ padding:'.35rem 1.1rem', borderRadius:9999, fontSize:'.7rem', fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', background:i%2===0?'rgba(245,245,220,.15)':'rgba(184,115,51,.3)', border:`1px solid ${i%2===0?'rgba(245,245,220,.3)':B.copper}`, color:B.parchment }}>{p}</span>
             ))}
           </div>
-          <div style={{ display:'flex', flexWrap:'wrap', gap:'1rem', justifyContent:'center' }}>
-            <button onClick={() => sv('travel')} className="btn-copper lift" style={{ display:'flex', alignItems:'center', gap:'.5rem', padding:'1rem 2.25rem', borderRadius:8, fontSize:'1rem' }}><Plane size={20}/> Book Your Trip</button>
-            <button onClick={() => sv('business')} style={{ display:'flex', alignItems:'center', gap:'.5rem', padding:'1rem 2.25rem', borderRadius:8, fontSize:'1rem', fontWeight:700, background:'transparent', border:`2px solid ${B.parchment}`, color:B.parchment, cursor:'pointer', transition:'all .2s' }}
+          <div className="hero-btns" style={{ display:'flex', flexWrap:'wrap', gap:'1rem', justifyContent:'center' }}>
+            <button onClick={() => sv('travel')} className="btn-copper lift" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'.5rem', padding:'1.1rem 2.5rem', borderRadius:8, fontSize:'1.05rem' }}><Plane size={20}/> Book Your Trip</button>
+            <button onClick={() => sv('business')} style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'.5rem', padding:'1.1rem 2.5rem', borderRadius:8, fontSize:'1.05rem', fontWeight:700, background:'transparent', border:`2px solid ${B.parchment}`, color:B.parchment, cursor:'pointer', transition:'all .2s' }}
               onMouseEnter={e=>{e.currentTarget.style.background=B.parchment;e.currentTarget.style.color=B.green;}}
               onMouseLeave={e=>{e.currentTarget.style.background='transparent';e.currentTarget.style.color=B.parchment;}}><Briefcase size={20}/> Build Your Business</button>
           </div>
         </div>
-        <div style={{ position:'absolute', bottom:'2rem', left:'50%', transform:'translateX(-50%)', display:'flex', flexDirection:'column', alignItems:'center', gap:'.3rem', opacity:.55, color:B.parchment }}>
+        <div className="hide-mobile" style={{ position:'absolute', bottom:'2rem', left:'50%', transform:'translateX(-50%)', display:'flex', flexDirection:'column', alignItems:'center', gap:'.3rem', opacity:.55, color:B.parchment }}>
           <span style={{ fontSize:'.65rem', letterSpacing:'.15em', textTransform:'uppercase' }}>Scroll</span>
           <div style={{ width:1, height:36, background:B.parchment }}/>
         </div>
@@ -696,11 +696,6 @@ function BlogPage({ sv, selectedPost, setSelectedPost }) {
       </div>
 
       <div style={{ maxWidth:1280, margin:'0 auto', padding:'3rem 1.5rem' }}>
-        {/* Full article callout */}
-        <div style={{ marginBottom:'2rem', padding:'1rem 1.25rem', borderRadius:8, background:`${B.copper}12`, border:`1px solid rgba(184,115,51,.2)`, display:'flex', alignItems:'center', gap:'.75rem' }}>
-          <Star size={18} style={{ color:B.copper, flexShrink:0 }}/>
-          <span style={{ fontSize:'.875rem', color:B.green }}><strong>3 full articles are live</strong> — look for the <span style={{ background:B.copper, color:B.parchment, padding:'.1rem .4rem', borderRadius:3, fontSize:'.7rem', fontWeight:700 }}>Full Article</span> badge to read the complete post.</span>
-        </div>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))', gap:'2rem' }}>
           {filtered.map((p,i) => <BlogCard key={i} post={p} sv={sv} setSelectedPost={setSelectedPost}/>)}
         </div>
