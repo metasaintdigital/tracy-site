@@ -164,10 +164,19 @@ export default function App() {
         @media(max-width:768px){
           .desktop-nav{display:none!important;}
           .mobile-btn{display:block!important;}
+          .hide-mobile{display:none!important;}
           .split-two{grid-template-columns:1fr!important;}
           .three-col{grid-template-columns:1fr!important;}
           .four-col{grid-template-columns:1fr 1fr!important;}
           .two-col{grid-template-columns:1fr!important;}
+          .section-pad{padding:2.5rem 1.25rem!important;}
+          .hero-btns{flex-direction:column!important;align-items:stretch!important;gap:.75rem!important;}
+          .hero-btns button{justify-content:center!important;width:100%!important;}
+          .footer-grid{grid-template-columns:1fr!important;gap:2rem!important;}
+          .footer-book-btn{display:flex!important;width:100%!important;justify-content:center!important;padding:1rem!important;font-size:1rem!important;border-radius:8px!important;}
+        }
+        @media(max-width:480px){
+          .four-col{grid-template-columns:1fr!important;}
         }
       `}</style>
       <Navbar view={view} sv={setView} open={mobileOpen} setOpen={setMobileOpen} />
@@ -241,7 +250,7 @@ function Footer({ sv }) {
             <a href="https://www.instagram.com/travelwithtracydstuckey" target="_blank" rel="noopener noreferrer" style={{ display:'flex', alignItems:'center', gap:'.5rem', color:`${B.parchment}BB`, textDecoration:'none', fontSize:'.875rem', marginBottom:'.75rem' }}><Instagram size={17}/> Instagram</a>
             <a href="https://www.linkedin.com/company/119594005/" target="_blank" rel="noopener noreferrer" style={{ display:'flex', alignItems:'center', gap:'.5rem', color:`${B.parchment}BB`, textDecoration:'none', fontSize:'.875rem', marginBottom:'1.5rem' }}><Linkedin size={17}/> LinkedIn</a>
             <a href="mailto:info@tracydstuckey.com" style={{ display:'flex', alignItems:'center', gap:'.5rem', color:`${B.parchment}BB`, textDecoration:'none', fontSize:'.875rem', marginBottom:'1.5rem' }}><Mail size={17}/> Email Tracy</a>
-            <a href="https://tracystuckey.inteletravel.com/booktravel.cfm" target="_blank" rel="noopener noreferrer" className="btn-copper" style={{ display:'inline-flex', alignItems:'center', gap:'.4rem', padding:'.5rem 1.1rem', borderRadius:6, textDecoration:'none', fontSize:'.8rem' }}><Plane size={15}/> Book Travel</a>
+            <a href="https://tracystuckey.inteletravel.com/booktravel.cfm" target="_blank" rel="noopener noreferrer" className="btn-copper footer-book-btn" style={{ display:'inline-flex', alignItems:'center', gap:'.4rem', padding:'.5rem 1.1rem', borderRadius:6, textDecoration:'none', fontSize:'.8rem' }}><Plane size={15}/> Book Travel</a>
           </div>
         </div>
         <div className="copper-bar" style={{ marginBottom:'1.5rem' }}/>
