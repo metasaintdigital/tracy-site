@@ -24,7 +24,7 @@ const POSTS = [
     title: "How to Maximize Your Travel Points in 2026",
     category: "Travel Hacks",
     date: "June 10, 2026",
-    image: "https://images.unsplash.com/photo-1488646953014-c8bf2a9d80d1?auto=format&fit=crop&q=80&w=1200",
+    image: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&q=80&w=1200",
     excerpt: "Listen, I'm only gonna say this once — you are leaving thousands of dollars of travel value on the table every year. Let me fix that.",
     content: [
       ['hook', "Listen, I'm only gonna say this once — you are leaving thousands of dollars of travel value on the table. Every. Single. Year. The hotels are banking on it. The airlines are definitely banking on it. And I'm here to make sure that stops today."],
@@ -95,21 +95,21 @@ const POSTS = [
   {
     title: "Why InteleTravel Is Changing the Game",
     category: "Industry News",
-    date: "May 15, 2026",
+    date: "July 10, 2026",
     image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=800",
     excerpt: "An inside look at how independent travel agents are dominating modern booking — and why the big platforms didn't see it coming.",
   },
   {
     title: "Top 5 Destinations for Remote Entrepreneurs",
     category: "Business Lifestyle",
-    date: "May 28, 2026",
+    date: "July 22, 2026",
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800",
     excerpt: "Work from paradise. These are the most wifi-friendly, culture-rich, absolutely official spots to run your business from.",
   },
   {
     title: "Destination Weddings: What Nobody Tells You",
     category: "Travel Planning",
-    date: "April 15, 2026",
+    date: "August 7, 2026",
     image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=800",
     excerpt: "Planning a destination wedding without an agent? That's a whole headache — let me give you the run before you even start.",
   },
