@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
+  BrowserRouter, Routes, Route, useNavigate, useLocation, useParams, Navigate
+} from 'react-router-dom';
+import {
   Plane, Briefcase, ChevronRight, Globe, TrendingUp, Facebook, Instagram, Linkedin,
   Mail, ArrowLeft, Compass, Award, Users, Calendar, Search, BookOpen,
   Menu, X, Star, Heart, DollarSign, CheckCircle, Send, MapPin, Music, PartyPopper
@@ -21,6 +24,7 @@ const B = {
 // ─────────────────────────────────────────────────────────────
 const POSTS = [
   {
+    slug: "how-to-maximize-your-travel-points-in-2026",
     title: "How to Maximize Your Travel Points in 2026",
     category: "Travel Hacks",
     date: "June 10, 2026",
@@ -45,6 +49,7 @@ const POSTS = [
     ]
   },
   {
+    slug: "the-girls-trip-blueprint-how-i-do-it-every-time",
     title: "The Girls' Trip Blueprint: How I Do It Every Time",
     category: "Travel Lifestyle",
     date: "April 30, 2026",
@@ -69,6 +74,7 @@ const POSTS = [
     ]
   },
   {
+    slug: "from-passport-to-paycheck-my-story",
     title: "From Passport to Paycheck: My Story",
     category: "Business Mindset",
     date: "March 28, 2026",
@@ -93,6 +99,7 @@ const POSTS = [
     ]
   },
   {
+    slug: "why-inteletravel-is-changing-the-game",
     title: "Why InteleTravel Is Changing the Game",
     category: "Industry News",
     date: "July 10, 2026",
@@ -100,6 +107,7 @@ const POSTS = [
     excerpt: "An inside look at how independent travel agents are dominating modern booking — and why the big platforms didn't see it coming.",
   },
   {
+    slug: "top-5-destinations-for-remote-entrepreneurs",
     title: "Top 5 Destinations for Remote Entrepreneurs",
     category: "Business Lifestyle",
     date: "July 22, 2026",
@@ -107,6 +115,7 @@ const POSTS = [
     excerpt: "Work from paradise. These are the most wifi-friendly, culture-rich, absolutely official spots to run your business from.",
   },
   {
+    slug: "destination-weddings-what-nobody-tells-you",
     title: "Destination Weddings: What Nobody Tells You",
     category: "Travel Planning",
     date: "August 7, 2026",
@@ -116,26 +125,26 @@ const POSTS = [
 ];
 
 // ─────────────────────────────────────────────────────────────
-// APP
+// SCROLL TO TOP ON ROUTE CHANGE
+// ─────────────────────────────────────────────────────────────
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+}
+
+// ─────────────────────────────────────────────────────────────
+// APP  (wraps in BrowserRouter)
 // ─────────────────────────────────────────────────────────────
 export default function App() {
-  const [view, setView] = useState('home');
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(null);
+  return (
+    <BrowserRouter>
+      <AppLayout />
+    </BrowserRouter>
+  );
+}
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    setMobileOpen(false);
-    setSelectedPost(null);
-  }, [view]);
-
-  const pages = {
-    home:     <HomePage sv={setView} />,
-    travel:   <TravelPage sv={setView} />,
-    business: <BusinessPage sv={setView} />,
-    blog:     <BlogPage sv={setView} selectedPost={selectedPost} setSelectedPost={setSelectedPost} />,
-  };
-
+function AppLayout() {
   return (
     <div style={{ background: B.parchment, color: B.green, fontFamily:"'Source Sans 3',sans-serif", minHeight:'100vh', display:'flex', flexDirection:'column' }}>
       <style>{`
@@ -179,9 +188,19 @@ export default function App() {
           .four-col{grid-template-columns:1fr!important;}
         }
       `}</style>
-      <Navbar view={view} sv={setView} open={mobileOpen} setOpen={setMobileOpen} />
-      <main style={{flex:1}}>{pages[view]||pages.home}</main>
-      <Footer sv={setView} />
+      <ScrollToTop />
+      <Navbar />
+      <main style={{ flex:1 }}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/travel" element={<TravelPage />} />
+          <Route path="/business" element={<BusinessPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogPostDetail />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+      <Footer />
     </div>
   );
 }
@@ -189,24 +208,36 @@ export default function App() {
 // ─────────────────────────────────────────────────────────────
 // NAVBAR
 // ─────────────────────────────────────────────────────────────
-function Navbar({ view, sv, open, setOpen }) {
+function Navbar() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+
   useEffect(() => {
     const h = () => setScrolled(window.scrollY > 30);
     window.addEventListener('scroll', h);
     return () => window.removeEventListener('scroll', h);
   }, []);
-  const links = [['home','Home'],['travel','Book Travel'],['business','Build a Business'],['blog','Blog']];
+
+  // Close mobile menu on route change
+  useEffect(() => { setOpen(false); }, [location.pathname]);
+
+  const links = [['/', 'Home'], ['/travel', 'Book Travel'], ['/business', 'Build a Business'], ['/blog', 'Blog']];
+  const isActive = path => path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
+
   return (
     <nav style={{ position:'sticky', top:0, zIndex:100, background:scrolled?'rgba(245,245,220,.96)':B.parchment, borderBottom:`1px solid rgba(26,77,46,.1)`, backdropFilter:'blur(12px)', transition:'background .3s,box-shadow .3s', boxShadow:scrolled?'0 2px 20px rgba(26,77,46,.08)':'none' }}>
       <div style={{ maxWidth:1280, margin:'0 auto', padding:'0 1.5rem', display:'flex', alignItems:'center', justifyContent:'space-between', height:70 }}>
-        <button onClick={() => sv('home')} style={{ background:'none', border:'none', cursor:'pointer', textAlign:'left' }}>
+        <button onClick={() => navigate('/')} style={{ background:'none', border:'none', cursor:'pointer', textAlign:'left' }}>
           <div className="serif" style={{ color:B.green, fontSize:'1.2rem', fontWeight:700, lineHeight:1.1 }}>Tracy D. Stuckey</div>
           <div style={{ color:B.copper, fontSize:'.6rem', letterSpacing:'.2em', textTransform:'uppercase', fontWeight:700 }}>Travel &amp; Business</div>
         </button>
         <div className="desktop-nav" style={{ display:'flex', alignItems:'center', gap:'2rem' }}>
-          {links.map(([k,l]) => <button key={k} onClick={() => sv(k)} className={`nav-link${view===k?' active':''}`} style={{ color:B.green }}>{l}</button>)}
-          <button onClick={() => sv('travel')} className="btn-copper" style={{ padding:'.5rem 1.25rem', borderRadius:6, fontSize:'.875rem' }}>Book Now</button>
+          {links.map(([path, label]) => (
+            <button key={path} onClick={() => navigate(path)} className={`nav-link${isActive(path) ? ' active' : ''}`} style={{ color:B.green }}>{label}</button>
+          ))}
+          <button onClick={() => navigate('/travel')} className="btn-copper" style={{ padding:'.5rem 1.25rem', borderRadius:6, fontSize:'.875rem' }}>Book Now</button>
         </div>
         <button className="mobile-btn" onClick={() => setOpen(!open)} style={{ display:'none', background:'none', border:'none', cursor:'pointer', color:B.green }}>
           {open ? <X size={24}/> : <Menu size={24}/>}
@@ -214,8 +245,10 @@ function Navbar({ view, sv, open, setOpen }) {
       </div>
       {open && (
         <div style={{ background:B.parchment, borderTop:`1px solid rgba(26,77,46,.08)`, padding:'1rem 1.5rem 1.5rem' }}>
-          {links.map(([k,l]) => <button key={k} onClick={() => sv(k)} style={{ display:'block', width:'100%', textAlign:'left', padding:'.75rem 0', background:'none', border:'none', borderBottom:`1px solid rgba(26,77,46,.07)`, cursor:'pointer', color:view===k?B.copper:B.green, fontWeight:600, fontSize:'1rem' }}>{l}</button>)}
-          <button onClick={() => sv('travel')} className="btn-copper" style={{ marginTop:'1rem', width:'100%', padding:'.75rem', borderRadius:6, fontSize:'1rem' }}>Book Now</button>
+          {links.map(([path, label]) => (
+            <button key={path} onClick={() => navigate(path)} style={{ display:'block', width:'100%', textAlign:'left', padding:'.75rem 0', background:'none', border:'none', borderBottom:`1px solid rgba(26,77,46,.07)`, cursor:'pointer', color:isActive(path)?B.copper:B.green, fontWeight:600, fontSize:'1rem' }}>{label}</button>
+          ))}
+          <button onClick={() => navigate('/travel')} className="btn-copper" style={{ marginTop:'1rem', width:'100%', padding:'.75rem', borderRadius:6, fontSize:'1rem' }}>Book Now</button>
         </div>
       )}
     </nav>
@@ -225,7 +258,8 @@ function Navbar({ view, sv, open, setOpen }) {
 // ─────────────────────────────────────────────────────────────
 // FOOTER
 // ─────────────────────────────────────────────────────────────
-function Footer({ sv }) {
+function Footer() {
+  const navigate = useNavigate();
   return (
     <footer style={{ background:B.green, color:B.parchment }}>
       <div style={{ height:4, background:`linear-gradient(90deg,${B.copper},${B.rose},${B.copper})` }}/>
@@ -239,9 +273,9 @@ function Footer({ sv }) {
           </div>
           <div>
             <div style={{ color:B.copper, fontSize:'.65rem', letterSpacing:'.18em', textTransform:'uppercase', fontWeight:700, marginBottom:'1rem' }}>Navigate</div>
-            {[['home','Home'],['travel','Book Travel'],['business','Build a Business'],['blog','Blog']].map(([k,l]) => (
-              <button key={k} onClick={() => sv(k)} style={{ display:'block', background:'none', border:'none', cursor:'pointer', color:`${B.parchment}BB`, fontSize:'.875rem', marginBottom:'.6rem', textAlign:'left', transition:'color .2s' }}
-                onMouseEnter={e=>e.target.style.color=B.copper} onMouseLeave={e=>e.target.style.color=`${B.parchment}BB`}>{l}</button>
+            {[['/', 'Home'], ['/travel', 'Book Travel'], ['/business', 'Build a Business'], ['/blog', 'Blog']].map(([path, label]) => (
+              <button key={path} onClick={() => navigate(path)} style={{ display:'block', background:'none', border:'none', cursor:'pointer', color:`${B.parchment}BB`, fontSize:'.875rem', marginBottom:'.6rem', textAlign:'left', transition:'color .2s' }}
+                onMouseEnter={e=>e.target.style.color=B.copper} onMouseLeave={e=>e.target.style.color=`${B.parchment}BB`}>{label}</button>
             ))}
           </div>
           <div>
@@ -266,7 +300,9 @@ function Footer({ sv }) {
 // ─────────────────────────────────────────────────────────────
 // HOME PAGE
 // ─────────────────────────────────────────────────────────────
-function HomePage({ sv }) {
+function HomePage() {
+  const navigate = useNavigate();
+  useEffect(() => { document.title = 'Tracy D. Stuckey | Travel Agent & Entrepreneur'; }, []);
   return (
     <div className="fade-up">
       {/* ── HERO: Full-bleed, dead center ── */}
@@ -292,8 +328,8 @@ function HomePage({ sv }) {
             ))}
           </div>
           <div className="hero-btns" style={{ display:'flex', flexWrap:'wrap', gap:'1rem', justifyContent:'center' }}>
-            <button onClick={() => sv('travel')} className="btn-copper lift" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'.5rem', padding:'1.1rem 2.5rem', borderRadius:8, fontSize:'1.05rem' }}><Plane size={20}/> Book Your Trip</button>
-            <button onClick={() => sv('business')} style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'.5rem', padding:'1.1rem 2.5rem', borderRadius:8, fontSize:'1.05rem', fontWeight:700, background:'transparent', border:`2px solid ${B.parchment}`, color:B.parchment, cursor:'pointer', transition:'all .2s' }}
+            <button onClick={() => navigate('/travel')} className="btn-copper lift" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'.5rem', padding:'1.1rem 2.5rem', borderRadius:8, fontSize:'1.05rem' }}><Plane size={20}/> Book Your Trip</button>
+            <button onClick={() => navigate('/business')} style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'.5rem', padding:'1.1rem 2.5rem', borderRadius:8, fontSize:'1.05rem', fontWeight:700, background:'transparent', border:`2px solid ${B.parchment}`, color:B.parchment, cursor:'pointer', transition:'all .2s' }}
               onMouseEnter={e=>{e.currentTarget.style.background=B.parchment;e.currentTarget.style.color=B.green;}}
               onMouseLeave={e=>{e.currentTarget.style.background='transparent';e.currentTarget.style.color=B.parchment;}}><Briefcase size={20}/> Build Your Business</button>
           </div>
@@ -307,10 +343,10 @@ function HomePage({ sv }) {
       {/* ── SPLIT CTA ── */}
       <section style={{ display:'grid', gridTemplateColumns:'1fr 1fr' }} className="split-two">
         {[
-          { v:'travel',   bg:"url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=1600')", ov:`${B.teal}CC`, icon:<Plane size={52}/>, title:'Book Your Trip Now', sub:'From hidden gems to luxury bucket lists — I handle every detail so your only job is to show up.', cta:'Explore Travel Services' },
-          { v:'business', bg:"url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1600')", ov:`${B.green}E0`, icon:<Briefcase size={52} style={{color:B.copper}}/>, title:'Build Your Business', sub:'Get paid to do what you already do — recommend incredible experiences. The blueprint is ready.', cta:'Start Your Travel Business' },
-        ].map(({ v, bg, ov, icon, title, sub, cta }) => (
-          <div key={v} onClick={() => sv(v)} style={{ position:'relative', minHeight:480, cursor:'pointer', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center' }}>
+          { path:'/travel',   bg:"url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=1600')", ov:`${B.teal}CC`, icon:<Plane size={52}/>, title:'Book Your Trip Now', sub:'From hidden gems to luxury bucket lists — I handle every detail so your only job is to show up.', cta:'Explore Travel Services' },
+          { path:'/business', bg:"url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1600')", ov:`${B.green}E0`, icon:<Briefcase size={52} style={{color:B.copper}}/>, title:'Build Your Business', sub:'Get paid to do what you already do — recommend incredible experiences. The blueprint is ready.', cta:'Start Your Travel Business' },
+        ].map(({ path, bg, ov, icon, title, sub, cta }) => (
+          <div key={path} onClick={() => navigate(path)} style={{ position:'relative', minHeight:480, cursor:'pointer', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center' }}>
             <div style={{ position:'absolute', inset:0, backgroundImage:bg, backgroundSize:'cover', backgroundPosition:'center', transition:'transform .7s' }}
               onMouseEnter={e=>e.currentTarget.style.transform='scale(1.08)'} onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}/>
             <div style={{ position:'absolute', inset:0, background:ov }}/>
@@ -357,10 +393,10 @@ function HomePage({ sv }) {
             <p style={{ color:`${B.green}99` }}>Travel tips, business insights, and the real talk you didn't know you needed.</p>
           </div>
           <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))', gap:'2rem' }}>
-            {POSTS.slice(0,3).map((p,i) => <BlogCard key={i} post={p} onClick={() => {}} sv={sv} fromHome />)}
+            {POSTS.slice(0,3).map((p,i) => <BlogCard key={i} post={p} fromHome />)}
           </div>
           <div style={{ textAlign:'center', marginTop:'2.5rem' }}>
-            <button onClick={() => sv('blog')} className="btn-outline-copper" style={{ padding:'.75rem 2rem', borderRadius:8, fontSize:'.9rem' }}>View All Posts</button>
+            <button onClick={() => navigate('/blog')} className="btn-outline-copper" style={{ padding:'.75rem 2rem', borderRadius:8, fontSize:'.9rem' }}>View All Posts</button>
           </div>
         </div>
       </section>
@@ -380,7 +416,9 @@ function HomePage({ sv }) {
 // ─────────────────────────────────────────────────────────────
 // TRAVEL PAGE
 // ─────────────────────────────────────────────────────────────
-function TravelPage({ sv }) {
+function TravelPage() {
+  const navigate = useNavigate();
+  useEffect(() => { document.title = 'Book Your Trip | Tracy D. Stuckey'; }, []);
   const [form, setForm] = useState({ name:'', email:'', phone:'', tripType:'', destination:'', depart:'', returnDate:'', travelers:'2', budget:'', notes:'' });
   const [submitted, setSubmitted] = useState(false);
   const set = k => e => setForm(f => ({...f, [k]: e.target.value}));
@@ -397,7 +435,7 @@ function TravelPage({ sv }) {
       <div style={{ background:B.teal, padding:'6rem 1.5rem 7rem', position:'relative', overflow:'hidden' }}>
         <div style={{ position:'absolute', inset:0, backgroundImage:"url('https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&q=80&w=2000')", backgroundSize:'cover', backgroundPosition:'center', opacity:.2 }}/>
         <div style={{ position:'relative', zIndex:1, maxWidth:1280, margin:'0 auto' }}>
-          <button onClick={() => sv('home')} style={{ display:'flex', alignItems:'center', gap:'.4rem', background:'none', border:'none', cursor:'pointer', color:`${B.parchment}99`, marginBottom:'2rem', fontSize:'.875rem' }}><ArrowLeft size={17}/> Back to Home</button>
+          <button onClick={() => navigate('/')} style={{ display:'flex', alignItems:'center', gap:'.4rem', background:'none', border:'none', cursor:'pointer', color:`${B.parchment}99`, marginBottom:'2rem', fontSize:'.875rem' }}><ArrowLeft size={17}/> Back to Home</button>
           <div style={{ display:'flex', alignItems:'center', gap:'.5rem', marginBottom:'1rem' }}>
             <Plane size={17} style={{ color:B.copper }}/><span style={{ color:B.copper, fontSize:'.68rem', fontWeight:700, letterSpacing:'.18em', textTransform:'uppercase' }}>Book Travel</span>
           </div>
@@ -491,16 +529,18 @@ function TravelPage({ sv }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// BUSINESS PAGE  (no PlanNet Marketing mentions)
+// BUSINESS PAGE
 // ─────────────────────────────────────────────────────────────
-function BusinessPage({ sv }) {
+function BusinessPage() {
+  const navigate = useNavigate();
+  useEffect(() => { document.title = 'Build Your Travel Business | Tracy D. Stuckey'; }, []);
   return (
     <div className="fade-up" style={{ background:B.parchment }}>
       <div style={{ background:B.green, padding:'7rem 1.5rem 6rem', position:'relative', overflow:'hidden' }}>
         <div style={{ position:'absolute', inset:0, backgroundImage:"url('https://images.unsplash.com/photo-1556761175-5973dc0f32d7?auto=format&fit=crop&q=80&w=2000')", backgroundSize:'cover', backgroundPosition:'center', opacity:.25 }}/>
         <div style={{ position:'absolute', inset:0, background:`linear-gradient(135deg,${B.green}F5,${B.green}B0)` }}/>
         <div style={{ position:'relative', zIndex:1, maxWidth:1280, margin:'0 auto' }}>
-          <button onClick={() => sv('home')} style={{ display:'flex', alignItems:'center', gap:'.4rem', background:'none', border:'none', cursor:'pointer', color:B.rose, marginBottom:'2rem', fontSize:'.875rem' }}><ArrowLeft size={17}/> Back to Home</button>
+          <button onClick={() => navigate('/')} style={{ display:'flex', alignItems:'center', gap:'.4rem', background:'none', border:'none', cursor:'pointer', color:B.rose, marginBottom:'2rem', fontSize:'.875rem' }}><ArrowLeft size={17}/> Back to Home</button>
           <div style={{ display:'flex', alignItems:'center', gap:'.5rem', marginBottom:'1rem' }}>
             <Briefcase size={17} style={{ color:B.copper }}/><span style={{ color:B.copper, fontSize:'.68rem', fontWeight:700, letterSpacing:'.18em', textTransform:'uppercase' }}>Business Opportunity</span>
           </div>
@@ -559,7 +599,7 @@ function BusinessPage({ sv }) {
             <p style={{ fontSize:'.875rem', color:`${B.green}99`, lineHeight:1.7, marginBottom:'1.5rem' }}>
               The best first step is a conversation. Read the full story of how this business works and what it has meant for my life — then reach out.
             </p>
-            <button onClick={() => { const post = POSTS.find(p => p.title.includes('Passport to Paycheck')); if(post){ setSelectedPost(post); sv('blog'); window.scrollTo(0,0); }}} style={{ display:'inline-flex', alignItems:'center', gap:'.4rem', color:B.copper, fontWeight:700, background:'none', border:'none', cursor:'pointer', fontSize:'.9rem', padding:0 }}>
+            <button onClick={() => navigate('/blog/from-passport-to-paycheck-my-story')} style={{ display:'inline-flex', alignItems:'center', gap:'.4rem', color:B.copper, fontWeight:700, background:'none', border:'none', cursor:'pointer', fontSize:'.9rem', padding:0 }}>
               Read "From Passport to Paycheck" <ChevronRight size={17}/>
             </button>
           </div>
@@ -581,14 +621,14 @@ function BusinessPage({ sv }) {
 // ─────────────────────────────────────────────────────────────
 // BLOG CARD
 // ─────────────────────────────────────────────────────────────
-function BlogCard({ post, sv, setSelectedPost, fromHome }) {
+function BlogCard({ post, fromHome }) {
+  const navigate = useNavigate();
   const hasArticle = !!post.content;
   const handleClick = () => {
-    if (hasArticle && setSelectedPost) {
-      setSelectedPost(post);
-      window.scrollTo(0,0);
+    if (hasArticle) {
+      navigate(`/blog/${post.slug}`);
     } else if (fromHome) {
-      sv('blog');
+      navigate('/blog');
     }
   };
   return (
@@ -614,16 +654,26 @@ function BlogCard({ post, sv, setSelectedPost, fromHome }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// BLOG POST DETAIL
+// BLOG POST DETAIL  (gets post from URL slug via useParams)
 // ─────────────────────────────────────────────────────────────
-function BlogPostDetail({ post, onBack, sv }) {
+function BlogPostDetail() {
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  const post = POSTS.find(p => p.slug === slug);
+
+  useEffect(() => {
+    if (post) document.title = `${post.title} | Tracy D. Stuckey`;
+  }, [post]);
+
+  if (!post || !post.content) return <Navigate to="/blog" replace />;
+
   return (
     <div className="fade-up">
       {/* Hero image */}
       <div style={{ height:'45vh', minHeight:320, position:'relative', backgroundImage:`url(${post.image})`, backgroundSize:'cover', backgroundPosition:'center' }}>
         <div style={{ position:'absolute', inset:0, background:`linear-gradient(to bottom, rgba(26,77,46,.5), rgba(26,77,46,.85))` }}/>
         <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:'2.5rem', maxWidth:860, margin:'0 auto' }}>
-          <button onClick={onBack} style={{ display:'flex', alignItems:'center', gap:'.4rem', background:'none', border:'none', cursor:'pointer', color:`${B.parchment}CC`, marginBottom:'1rem', fontSize:'.875rem' }}><ArrowLeft size={17}/> Back to Blog</button>
+          <button onClick={() => navigate('/blog')} style={{ display:'flex', alignItems:'center', gap:'.4rem', background:'none', border:'none', cursor:'pointer', color:`${B.parchment}CC`, marginBottom:'1rem', fontSize:'.875rem' }}><ArrowLeft size={17}/> Back to Blog</button>
           <div style={{ display:'flex', alignItems:'center', gap:'.75rem', marginBottom:'.75rem' }}>
             <span style={{ color:B.copper, fontSize:'.7rem', fontWeight:700, letterSpacing:'.12em', textTransform:'uppercase', background:'rgba(184,115,51,.25)', padding:'.25rem .7rem', borderRadius:4 }}>{post.category}</span>
             <span style={{ color:`${B.parchment}80`, fontSize:'.8rem' }}>{post.date}</span>
@@ -668,7 +718,7 @@ function BlogPostDetail({ post, onBack, sv }) {
         <div style={{ marginTop:'3rem', padding:'2rem', borderRadius:12, background:`${B.teal}10`, border:`1px solid rgba(31,110,109,.15)`, textAlign:'center' }}>
           <p className="serif" style={{ fontSize:'1.1rem', fontWeight:700, color:B.green, marginBottom:'.5rem' }}>Ready to make your next trip happen?</p>
           <p style={{ color:`${B.green}99`, fontSize:'.9rem', marginBottom:'1.5rem' }}>Let Tracy handle every detail — your only job is to show up.</p>
-          <button onClick={() => { sv('travel'); window.scrollTo(0,0); }} className="btn-copper" style={{ padding:'.85rem 2rem', borderRadius:8, fontSize:'.95rem', display:'inline-flex', alignItems:'center', gap:'.5rem' }}><Plane size={18}/> Request Your Trip</button>
+          <button onClick={() => navigate('/travel')} className="btn-copper" style={{ padding:'.85rem 2rem', borderRadius:8, fontSize:'.95rem', display:'inline-flex', alignItems:'center', gap:'.5rem' }}><Plane size={18}/> Request Your Trip</button>
         </div>
       </div>
     </div>
@@ -678,12 +728,10 @@ function BlogPostDetail({ post, onBack, sv }) {
 // ─────────────────────────────────────────────────────────────
 // BLOG PAGE
 // ─────────────────────────────────────────────────────────────
-function BlogPage({ sv, selectedPost, setSelectedPost }) {
+function BlogPage() {
+  const navigate = useNavigate();
+  useEffect(() => { document.title = 'Blog | Tracy D. Stuckey'; }, []);
   const [active, setActive] = useState('All');
-
-  useEffect(() => { if (selectedPost) window.scrollTo(0,0); }, [selectedPost]);
-
-  if (selectedPost) return <BlogPostDetail post={selectedPost} onBack={() => setSelectedPost(null)} sv={sv}/>;
 
   const cats = ['All', ...new Set(POSTS.map(p => p.category))];
   const filtered = active === 'All' ? POSTS : POSTS.filter(p => p.category === active);
@@ -692,7 +740,7 @@ function BlogPage({ sv, selectedPost, setSelectedPost }) {
     <div className="fade-up" style={{ background:B.parchment, minHeight:'100vh' }}>
       <div style={{ background:B.green, padding:'5rem 1.5rem 4rem' }}>
         <div style={{ maxWidth:1280, margin:'0 auto' }}>
-          <button onClick={() => sv('home')} style={{ display:'flex', alignItems:'center', gap:'.4rem', background:'none', border:'none', cursor:'pointer', color:B.rose, marginBottom:'1.5rem', fontSize:'.875rem' }}><ArrowLeft size={17}/> Back to Home</button>
+          <button onClick={() => navigate('/')} style={{ display:'flex', alignItems:'center', gap:'.4rem', background:'none', border:'none', cursor:'pointer', color:B.rose, marginBottom:'1.5rem', fontSize:'.875rem' }}><ArrowLeft size={17}/> Back to Home</button>
           <div style={{ display:'flex', alignItems:'center', gap:'.5rem', marginBottom:'1rem' }}><BookOpen size={17} style={{ color:B.copper }}/><span style={{ color:B.copper, fontSize:'.68rem', fontWeight:700, letterSpacing:'.18em', textTransform:'uppercase' }}>The Lifestyle Blog</span></div>
           <h1 className="serif" style={{ fontSize:'clamp(2.25rem,5vw,3.5rem)', fontWeight:700, color:B.parchment, marginBottom:'.75rem' }}>Insights, Tea &amp; Travel Tips.</h1>
           <p style={{ fontSize:'1.05rem', color:`${B.parchment}CC`, maxWidth:500 }}>The real talk you need for the travel lifestyle and business you deserve.</p>
@@ -708,7 +756,7 @@ function BlogPage({ sv, selectedPost, setSelectedPost }) {
 
       <div style={{ maxWidth:1280, margin:'0 auto', padding:'3rem 1.5rem' }}>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))', gap:'2rem' }}>
-          {filtered.map((p,i) => <BlogCard key={i} post={p} sv={sv} setSelectedPost={setSelectedPost}/>)}
+          {filtered.map((p,i) => <BlogCard key={i} post={p} />)}
         </div>
       </div>
     </div>
