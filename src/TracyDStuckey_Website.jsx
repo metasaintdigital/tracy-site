@@ -72,7 +72,7 @@ const POSTS = [
     title: "From Passport to Paycheck: My Story",
     category: "Business Mindset",
     date: "March 28, 2026",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=1200",
+    image: "https://lh3.googleusercontent.com/d/1WjdrL5S0GS91tgynhyd2IwbJvjx_Po-A",
     excerpt: "Real talk: I turned a girls' trip into a revenue stream. Not by accident — by design. Here's how the whole thing started.",
     content: [
       ['hook', "Real talk: I turned a girls' trip into a revenue stream. And honestly? I didn't plan it that way. The revelation crept up on me somewhere between my third international trip in eighteen months and the moment a friend pulled me aside and said, 'How are you doing all of this?'"],
@@ -271,7 +271,7 @@ function HomePage({ sv }) {
     <div className="fade-up">
       {/* ── HERO: Full-bleed, dead center ── */}
       <section style={{ position:'relative', minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden' }}>
-        <img src="https://images.unsplash.com/photo-1530521954074-e64f6810b32d?auto=format&fit=crop&q=80&w=2000" alt="" style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center' }}/>
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=2000" alt="" style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center' }}/>
         <div style={{ position:'absolute', inset:0, background:`linear-gradient(160deg,${B.green}F2 0%,${B.green}C0 45%,${B.teal}95 100%)` }}/>
         <div style={{ position:'relative', zIndex:1, textAlign:'center', maxWidth:860, padding:'2rem 1.5rem', color:B.parchment }}>
           <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'1rem', marginBottom:'1.5rem' }}>
