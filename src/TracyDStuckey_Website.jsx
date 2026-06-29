@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Plane, Briefcase, ChevronRight, Globe, TrendingUp, Facebook, Instagram, Linkedin,
   Mail, ArrowLeft, Compass, Award, Users, Calendar, Search, BookOpen,
-  Menu, X, Star, Heart, DollarSign, CheckCircle, Send, MapPin
+  Menu, X, Star, Heart, DollarSign, CheckCircle, Send, MapPin, Music, PartyPopper
 } from 'lucide-react';
 
 // ─────────────────────────────────────────────────────────────
@@ -232,8 +232,8 @@ function Footer({ sv }) {
       <div style={{ maxWidth:1280, margin:'0 auto', padding:'4rem 1.5rem' }}>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))', gap:'3rem', marginBottom:'3rem' }}>
           <div style={{ gridColumn:'span 2' }}>
-            <div className="serif" style={{ fontSize:'1.5rem', fontWeight:700, marginBottom:'.25rem' }}>Tracy D. Stuckey</div>
-            <div style={{ color:B.copper, fontSize:'.6rem', letterSpacing:'.2em', textTransform:'uppercase', fontWeight:700, marginBottom:'1rem' }}>Travel &amp; Business</div>
+            <div className="serif" style={{ fontSize:'2.25rem', fontWeight:700, marginBottom:'.35rem' }}>Tracy D. Stuckey</div>
+            <div style={{ color:B.copper, fontSize:'.8rem', letterSpacing:'.2em', textTransform:'uppercase', fontWeight:700, marginBottom:'1rem' }}>Travel &amp; Business</div>
             <p style={{ fontSize:'.875rem', opacity:.8, lineHeight:1.7, maxWidth:340, marginBottom:'1rem' }}>Travel is more than a getaway — it's a gateway to personal fulfillment, financial freedom, and generational wealth.</p>
             <div className="italic" style={{ color:B.copper, fontSize:'.875rem' }}>"Your legacy starts with your next trip."</div>
           </div>
@@ -250,7 +250,7 @@ function Footer({ sv }) {
             <a href="https://www.instagram.com/travelwithtracydstuckey" target="_blank" rel="noopener noreferrer" style={{ display:'flex', alignItems:'center', gap:'.5rem', color:`${B.parchment}BB`, textDecoration:'none', fontSize:'.875rem', marginBottom:'.75rem' }}><Instagram size={17}/> Instagram</a>
             <a href="https://www.linkedin.com/company/119594005/" target="_blank" rel="noopener noreferrer" style={{ display:'flex', alignItems:'center', gap:'.5rem', color:`${B.parchment}BB`, textDecoration:'none', fontSize:'.875rem', marginBottom:'1.5rem' }}><Linkedin size={17}/> LinkedIn</a>
             <a href="mailto:info@tracydstuckey.com" style={{ display:'flex', alignItems:'center', gap:'.5rem', color:`${B.parchment}BB`, textDecoration:'none', fontSize:'.875rem', marginBottom:'1.5rem' }}><Mail size={17}/> Email Tracy</a>
-            <a href="https://tracystuckey.inteletravel.com/booktravel.cfm" target="_blank" rel="noopener noreferrer" className="btn-copper footer-book-btn" style={{ display:'inline-flex', alignItems:'center', gap:'.4rem', padding:'.5rem 1.1rem', borderRadius:6, textDecoration:'none', fontSize:'.8rem' }}><Plane size={15}/> Book Travel</a>
+            <a href="https://tracystuckey.inteletravel.com/booktravel.cfm" target="_blank" rel="noopener noreferrer" className="btn-copper footer-book-btn" style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', gap:'.5rem', padding:'.85rem 1.75rem', borderRadius:8, textDecoration:'none', fontSize:'1rem', width:'100%' }}><Plane size={18}/> Book Travel</a>
           </div>
         </div>
         <div className="copper-bar" style={{ marginBottom:'1.5rem' }}/>
@@ -329,7 +329,7 @@ function HomePage({ sv }) {
         <div style={{ maxWidth:1280, margin:'0 auto' }}>
           <div style={{ textAlign:'center', marginBottom:'3.5rem' }}>
             <div className="copper-bar" style={{ width:80, margin:'0 auto 1.5rem' }}/>
-            <h2 className="serif" style={{ fontSize:'2rem', fontWeight:700, color:B.parchment, marginBottom:'.6rem' }}>The Blueprint</h2>
+            <h2 className="serif italic" style={{ fontSize:'2rem', fontWeight:700, color:B.rose, marginBottom:'.6rem' }}>The Blueprint</h2>
             <p style={{ color:`${B.parchment}99`, fontSize:'1rem' }}>Everything we do is built on four unshakeable pillars.</p>
           </div>
           <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'2rem' }} className="four-col">
@@ -366,7 +366,7 @@ function HomePage({ sv }) {
       </section>
 
       {/* ── QUOTE ── */}
-      <section style={{ background:B.teal, padding:'4.5rem 1.5rem', textAlign:'center' }}>
+      <section style={{ background:'#0ABAB5', padding:'4.5rem 1.5rem', textAlign:'center' }}>
         <div style={{ fontSize:'3.5rem', color:B.copper, lineHeight:.6, marginBottom:'1.25rem' }}>"</div>
         <p className="serif italic" style={{ fontSize:'clamp(1.3rem,2.5vw,1.9rem)', color:B.parchment, fontWeight:700, maxWidth:700, margin:'0 auto 1rem', lineHeight:1.45 }}>
           I'm telling you this because I love you. Now go get your bag.
@@ -474,8 +474,10 @@ function TravelPage({ sv }) {
               { icon:<Heart size={26}/>, title:'Destination Weddings', desc:'Full group coordination so your big day feels completely effortless.' },
               { icon:<Users size={26}/>, title:'Group Travel', desc:'Girls\' trips, family reunions, corporate retreats — all sizes welcome.' },
               { icon:<Compass size={26}/>, title:'Custom Itineraries', desc:'Tell me your vibe. I\'ll build the perfect blueprint just for you.' },
+              { icon:<Calendar size={26}/>, title:'Events', desc:'Travel parties, group experiences, and curated event packages — from concept to execution.' },
+              { icon:<Music size={26}/>, title:'Concerts & Shows', desc:'Concert travel packages, festival experiences, and live event trips done right.' },
             ].map(({ icon, title, desc }) => (
-              <div key={title} className="lift" style={{ background:'white', borderRadius:12, padding:'1.75rem', border:`1px solid rgba(26,77,46,.07)` }}>
+              <div key={title} className="lift" style={{ background:'white', borderRadius:12, padding:'2.25rem', border:`1px solid rgba(26,77,46,.07)` }}>
                 <div style={{ width:50, height:50, borderRadius:'50%', background:`${B.teal}15`, display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'1rem', color:B.teal }}>{icon}</div>
                 <h3 style={{ fontWeight:700, fontSize:'1rem', color:B.green, marginBottom:'.35rem' }}>{title}</h3>
                 <p style={{ fontSize:'.85rem', color:`${B.green}88`, lineHeight:1.6 }}>{desc}</p>
