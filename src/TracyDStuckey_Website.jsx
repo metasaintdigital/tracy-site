@@ -325,11 +325,11 @@ function HomePage({ sv }) {
       </section>
 
       {/* ── PILLARS ── */}
-      <section style={{ background:B.green, padding:'5rem 1.5rem' }}>
+      <section style={{ background:B.rose, padding:'5rem 1.5rem' }}>
         <div style={{ maxWidth:1280, margin:'0 auto' }}>
           <div style={{ textAlign:'center', marginBottom:'3.5rem' }}>
             <div className="copper-bar" style={{ width:80, margin:'0 auto 1.5rem' }}/>
-            <h2 className="serif italic" style={{ fontSize:'2rem', fontWeight:700, color:B.rose, marginBottom:'.6rem' }}>The Blueprint</h2>
+            <h2 className="serif italic" style={{ fontSize:'2rem', fontWeight:700, color:B.parchment, marginBottom:'.6rem' }}>The Blueprint</h2>
             <p style={{ color:`${B.parchment}99`, fontSize:'1rem' }}>Everything we do is built on four unshakeable pillars.</p>
           </div>
           <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'2rem' }} className="four-col">
