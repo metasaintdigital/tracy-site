@@ -340,8 +340,8 @@ function HomePage({ sv }) {
               { icon:<Star size={30}/>, label:'Inspire', desc:'Show future generations that dreaming without borders is a strategy.' },
             ].map(({ icon, label, desc }) => (
               <div key={label} style={{ textAlign:'center' }}>
-                <div style={{ width:60, height:60, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 1rem', background:'rgba(184,115,51,.2)', color:B.copper }}>{icon}</div>
-                <h3 style={{ color:B.copper, fontWeight:700, fontSize:'1.05rem', marginBottom:'.5rem' }}>{label}</h3>
+                <div style={{ width:60, height:60, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 1rem', background:'rgba(255,255,255,.25)', color:B.parchment }}>{icon}</div>
+                <h3 style={{ color:B.parchment, fontWeight:700, fontSize:'1.05rem', marginBottom:'.5rem' }}>{label}</h3>
                 <p style={{ color:`${B.parchment}CC`, fontSize:'.875rem', lineHeight:1.6 }}>{desc}</p>
               </div>
             ))}
