@@ -125,6 +125,59 @@ const POSTS = [
 ];
 
 // ─────────────────────────────────────────────────────────────
+// SCHEMA / STRUCTURED DATA
+// The Organization/Person/WebSite graph lives as static JSON-LD in
+// index.html so it's present in the raw HTML for crawlers. Everything
+// below adds page-specific JSON-LD (Service, BlogPosting, Breadcrumbs)
+// the same way this file already handles document.title — a small
+// useEffect per page, no extra dependency required.
+// ─────────────────────────────────────────────────────────────
+const SITE_URL = 'https://www.tracydstuckey.com';
+const ORG_ID = `${SITE_URL}/#organization`;
+const PERSON_ID = `${SITE_URL}/#person`;
+const SERVICE_AREA = [
+  { '@type': 'Place', name: 'Hampton Roads, Virginia' },
+  { '@type': 'State', name: 'Virginia' },
+  { '@type': 'State', name: 'Georgia' },
+  { '@type': 'State', name: 'North Carolina' },
+  { '@type': 'City', name: 'New York City', containedInPlace: { '@type': 'State', name: 'New York' } },
+  { '@type': 'State', name: 'New York' },
+];
+
+function useJsonLd(id, data) {
+  useEffect(() => {
+    if (!data) return;
+    let script = document.getElementById(id);
+    if (!script) {
+      script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.id = id;
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(data);
+    return () => { document.getElementById(id)?.remove(); };
+  }, [id, JSON.stringify(data)]);
+}
+
+function breadcrumb(items) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map(([name, path], i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name,
+      item: `${SITE_URL}${path}`,
+    })),
+  };
+}
+
+function toISODate(dateStr) {
+  const d = new Date(dateStr);
+  return isNaN(d) ? undefined : d.toISOString().slice(0, 10);
+}
+
+// ─────────────────────────────────────────────────────────────
 // SCROLL TO TOP ON ROUTE CHANGE
 // ─────────────────────────────────────────────────────────────
 function ScrollToTop() {
@@ -419,6 +472,17 @@ function HomePage() {
 function TravelPage() {
   const navigate = useNavigate();
   useEffect(() => { document.title = 'Book Your Trip | Tracy D. Stuckey'; }, []);
+  useJsonLd('schema-service-travel', {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    serviceType: 'Travel Planning & Booking',
+    name: 'Travel Planning & Booking with Tracy D. Stuckey',
+    description: 'Full-service trip planning and booking — flights, hotels, cruises, resorts, girls’ trips, group travel, and destination weddings — handled start to finish by independent travel agent Tracy D. Stuckey.',
+    provider: { '@id': ORG_ID },
+    areaServed: SERVICE_AREA,
+    url: `${SITE_URL}/travel`,
+  });
+  useJsonLd('schema-breadcrumb-travel', breadcrumb([['Home', '/'], ['Book Travel', '/travel']]));
   const [form, setForm] = useState({ name:'', email:'', phone:'', tripType:'', destination:'', depart:'', returnDate:'', travelers:'2', budget:'', notes:'' });
   const [submitted, setSubmitted] = useState(false);
   const set = k => e => setForm(f => ({...f, [k]: e.target.value}));
@@ -534,6 +598,17 @@ function TravelPage() {
 function BusinessPage() {
   const navigate = useNavigate();
   useEffect(() => { document.title = 'Build Your Travel Business | Tracy D. Stuckey'; }, []);
+  useJsonLd('schema-service-business', {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    serviceType: 'Travel Business Coaching',
+    name: 'Become an Independent Travel Agent with Tracy D. Stuckey',
+    description: 'Mentorship and onboarding into a commission-based travel business — become a certified independent travel agent, book travel for clients, and build a team, guided by Tracy D. Stuckey.',
+    provider: { '@id': ORG_ID },
+    areaServed: SERVICE_AREA,
+    url: `${SITE_URL}/business`,
+  });
+  useJsonLd('schema-breadcrumb-business', breadcrumb([['Home', '/'], ['Build a Business', '/business']]));
   return (
     <div className="fade-up" style={{ background:B.parchment }}>
       <div style={{ background:B.green, padding:'7rem 1.5rem 6rem', position:'relative', overflow:'hidden' }}>
@@ -665,6 +740,26 @@ function BlogPostDetail() {
     if (post) document.title = `${post.title} | Tracy D. Stuckey`;
   }, [post]);
 
+  useJsonLd('schema-blogposting', post && post.content ? {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt,
+    image: post.image,
+    author: { '@id': PERSON_ID },
+    publisher: { '@id': ORG_ID },
+    datePublished: toISODate(post.date),
+    dateModified: toISODate(post.date),
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${post.slug}` },
+    url: `${SITE_URL}/blog/${post.slug}`,
+    articleSection: post.category,
+    keywords: post.category,
+  } : null);
+
+  useJsonLd('schema-breadcrumb-blogpost', post && post.content
+    ? breadcrumb([['Home', '/'], ['Blog', '/blog'], [post.title, `/blog/${post.slug}`]])
+    : null);
+
   if (!post || !post.content) return <Navigate to="/blog" replace />;
 
   return (
@@ -731,6 +826,7 @@ function BlogPostDetail() {
 function BlogPage() {
   const navigate = useNavigate();
   useEffect(() => { document.title = 'Blog | Tracy D. Stuckey'; }, []);
+  useJsonLd('schema-breadcrumb-blog', breadcrumb([['Home', '/'], ['Blog', '/blog']]));
   const [active, setActive] = useState('All');
 
   const cats = ['All', ...new Set(POSTS.map(p => p.category))];
